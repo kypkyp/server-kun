@@ -2,47 +2,30 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2/google"
 	compute "google.golang.org/api/compute/v1"
-	"gopkg.in/yaml.v2"
 )
 
-type Credentials struct {
+type ServerConfig struct {
 	Project  string
 	Zone     string
 	Instance string
 }
 
-func readCredential(file string) Credentials {
-	c := Credentials{}
+func readServerConfig() *ServerConfig {
+	p := os.Getenv("SERVER_PROJECT")
+	z := os.Getenv("SERVER_ZONE")
+	i := os.Getenv("SERVER_INSTANCE")
 
-	f, err := os.Open(file)
-	if err != nil {
-		log.Fatalf("Failed to open credentials file: %v", err)
-	}
-	defer f.Close()
-
-	data, err := ioutil.ReadAll(f)
-
-	if err != nil {
-		log.Fatalf("Failed to read credentials file: %v", err)
-	}
-
-	err = yaml.Unmarshal(data, &c)
-	if err != nil {
-		log.Fatalf("Failed to read credentials file: %v", err)
-	}
-
-	return c
+	return &ServerConfig{p, z, i}
 }
 
 func main() {
-	c := readCredential("../../credentials.yml")
+	s := readServerConfig()
 
 	ctx := context.Background()
 	gcpClient, err := google.DefaultClient(ctx, compute.CloudPlatformScope)
@@ -57,9 +40,9 @@ func main() {
 		log.Fatalf("Failed to create GCE service: %v", err)
 	}
 
-	res, err := computeService.Instances.Stop(c.Project, c.Zone, c.Instance).Context(ctx).Do()
+	res, err := computeService.Instances.Stop(s.Project, s.Zone, s.Instance).Context(ctx).Do()
 	if err != nil {
-		log.Fatalf("Failed to stop instance: %v", err)
+		log.Fatalf("Failed to start instance: %v", err)
 	}
 
 	fmt.Printf("%#v\n", res)
