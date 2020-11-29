@@ -13,9 +13,9 @@ import (
 )
 
 type Credentials struct {
-	project  string
-	zone     string
-	instance string
+	Project  string
+	Zone     string
+	Instance string
 }
 
 func readCredential(file string) Credentials {
@@ -23,43 +23,43 @@ func readCredential(file string) Credentials {
 
 	f, err := os.Open(file)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to open credentials file: %v", err)
 	}
-	defer f.close()
+	defer f.Close()
 
 	data, err := ioutil.ReadAll(f)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to read credentials file: %v", err)
 	}
 
-	c, err = yaml.Marshal(&data)
+	err = yaml.Unmarshal(data, &c)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to read credentials file: %v", err)
 	}
 
 	return c
 }
 
 func main() {
-	c := readCredential("../credentials.yaml")
+	c := readCredential("../../credentials.yml")
 
 	ctx := context.Background()
 	gcpClient, err := google.DefaultClient(ctx, compute.CloudPlatformScope)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create GCP Client: %v", err)
 	}
 
 	computeService, err := compute.New(gcpClient)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create GCE service: %v", err)
 	}
 
-	res, err := computeService.Instances.Stop(c.project, c.zone, c.instance).Context(ctx).Do()
+	res, err := computeService.Instances.Stop(c.Project, c.Zone, c.Instance).Context(ctx).Do()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to stop instance: %v", err)
 	}
 
 	fmt.Printf("%#v\n", res)
