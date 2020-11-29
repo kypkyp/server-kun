@@ -8,14 +8,22 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-type DiscordConfig struct {
-	Token   string
-	Channel string
+type messageTemplate struct {
+	start string
+	stop  string
+}
+
+func readMessageTemplate() *messageTemplate {
+	start := os.Getenv("START_MESSAGE")
+	stop := os.Getenv("STOP_MESSAGE")
+
+	return &messageTemplate{start, stop}
 }
 
 type requestBody struct {
@@ -24,8 +32,6 @@ type requestBody struct {
 func newDiscordGo() (*discordgo.Session, error) {
 	token := os.Getenv("DISCORD_TOKEN")
 	str := fmt.Sprintf("Bot %v", token)
-
-	fmt.Println(str)
 
 	return discordgo.New(str)
 }
@@ -55,19 +61,21 @@ func stopServer() error {
 }
 
 func monitorMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Content == "mc start" {
+	mt := readMessageTemplate()
+
+	if strings.Contains(m.Content, ":minecraft_start:") {
 		err := startServer()
 		if err != nil {
 			log.Fatalf("Starting server failed: %v", err)
 		}
-		s.ChannelMessageSend(m.ChannelID, "たぶんサーバーが起動したよ！")
+		s.ChannelMessageSend(m.ChannelID, mt.start)
 	}
-	if m.Content == "mc stop" {
+	if strings.Contains(m.Content, ":minecraft_stop:") {
 		err := stopServer()
 		if err != nil {
 			log.Fatalf("Stopping server failed: %v", err)
 		}
-		s.ChannelMessageSend(m.ChannelID, "たぶんサーバーが停止したよ！")
+		s.ChannelMessageSend(m.ChannelID, mt.stop)
 	}
 }
 
