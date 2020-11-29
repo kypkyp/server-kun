@@ -1,8 +1,9 @@
-package main
+package stop
 
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"golang.org/x/net/context"
@@ -10,6 +11,7 @@ import (
 	compute "google.golang.org/api/compute/v1"
 )
 
+// ServerConfig is a set of properties which specify an instance.
 type ServerConfig struct {
 	Project  string
 	Zone     string
@@ -24,7 +26,8 @@ func readServerConfig() *ServerConfig {
 	return &ServerConfig{p, z, i}
 }
 
-func main() {
+// Stop stops a GCE instance.
+func Stop(w http.ResponseWriter, r *http.Request) {
 	s := readServerConfig()
 
 	ctx := context.Background()
