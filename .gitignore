@@ -61,3 +61,4 @@ terraform.rc
 
 .env.yaml
 app.yaml
+credentials
