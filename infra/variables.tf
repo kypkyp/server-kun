@@ -9,7 +9,7 @@ variable "credentials_file" {
 }
 
 # GCP region designated for Cloud Function. You can use any region you like.
-variable "cf_region" {
+variable "function_region" {
   default = "us-west1"
 }
 

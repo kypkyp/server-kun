@@ -5,5 +5,5 @@ output "receiver_ip" {
 
 output "start_endpoint" {
   description = "HTTP endpoint to start the target directly"
-  value       = google_cloudfunctions_function.function_start.https_trigger_url
+  value       = module.cf_start.https_endpoint
 }

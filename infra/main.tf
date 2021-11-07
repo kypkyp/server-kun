@@ -35,47 +35,21 @@ resource "google_compute_instance" "instance_receiver" {
   }
 }
 
-# start
-data "archive_file" "archive_start" {
-  type        = "zip"
-  source_dir  = "../functions/start"
-  output_path = "../functions/start.zip"
-}
-
+# Storage bucket cloud functions sources are stored.
 resource "google_storage_bucket" "bucket_source" {
   name     = "server-kun-source"
-  location = var.cf_region
+  location = var.function_region
 }
 
-resource "google_storage_bucket_object" "object_source_start" {
-  name   = "start.${data.archive_file.archive_start.output_md5}.zip"
-  bucket = google_storage_bucket.bucket_source.name
-  source = data.archive_file.archive_start.output_path
-}
-
-resource "google_cloudfunctions_function" "function_start" {
-  name                  = "server-kun-start"
-  description           = "Server-kun start"
-  region                = var.cf_region
-  runtime               = "go113"
-  available_memory_mb   = 128
-  timeout               = 30
-  source_archive_bucket = google_storage_bucket.bucket_source.name
-  source_archive_object = google_storage_bucket_object.object_source_start.name
-  trigger_http          = true
-  entry_point           = "Start"
-
-  environment_variables = {
-    SERVER_PROJECT  = var.project
-    SERVER_ZONE     = var.target_zone
-    SERVER_INSTANCE = var.target_instance_name
-  }
-}
-
-resource "google_cloudfunctions_function_iam_member" "invoker_start" {
-  region         = google_cloudfunctions_function.function_start.region
-  cloud_function = google_cloudfunctions_function.function_start.name
-
-  role   = "roles/cloudfunctions.invoker"
-  member = "allUsers" # TODO: Limit invoker to the receiver instance
+# Start function
+module "cf_start" {
+  source               = "./cloudfunctions"
+  source_bucket_name   = google_storage_bucket.bucket_source.name
+  function_region      = var.function_region
+  function_name        = "start"
+  description          = "A simple server starter by server-kun"
+  entry_point          = "Start"
+  target_instance_name = var.target_instance_name
+  target_zone          = var.target_zone
+  project              = var.project
 }
