@@ -7,3 +7,8 @@ output "start_endpoint" {
   description = "HTTP endpoint to start the target directly"
   value       = module.cf_start.https_endpoint
 }
+
+output "stop_endpoint" {
+  description = "HTTP endpoint to stop the target directly"
+  value       = module.cf_stop.https_endpoint
+}

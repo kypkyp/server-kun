@@ -53,3 +53,16 @@ module "cf_start" {
   target_zone          = var.target_zone
   project              = var.project
 }
+
+# Stop function
+module "cf_stop" {
+  source               = "./cloudfunctions"
+  source_bucket_name   = google_storage_bucket.bucket_source.name
+  function_region      = var.function_region
+  function_name        = "stop"
+  description          = "A simple server stopper by server-kun"
+  entry_point          = "Stop"
+  target_instance_name = var.target_instance_name
+  target_zone          = var.target_zone
+  project              = var.project
+}
