@@ -19,6 +19,7 @@ resource "google_compute_instance" "instance_receiver" {
   name         = "server-kun-receiver"
   zone         = var.receiver_zone
   machine_type = "e2-micro"
+  tags         = ["http-server", "https-server"]
 
   network_interface {
     network = "default"
@@ -69,4 +70,12 @@ resource "google_cloudfunctions_function" "function_start" {
     SERVER_ZONE     = var.target_zone
     SERVER_INSTANCE = var.target_instance_name
   }
+}
+
+resource "google_cloudfunctions_function_iam_member" "invoker_start" {
+  region         = google_cloudfunctions_function.function_start.region
+  cloud_function = google_cloudfunctions_function.function_start.name
+
+  role   = "roles/cloudfunctions.invoker"
+  member = "allUsers" # TODO: Limit invoker to the receiver instance
 }
