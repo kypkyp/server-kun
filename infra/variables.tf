@@ -23,3 +23,15 @@ variable "target_zone" {}
 
 # Zone of target server.
 variable "target_instance_name" {}
+
+variable "discord_token" {}
+
+variable "discord_channel" {}
+
+variable "start_message" {
+  default = "サーバーが起動したよ！1分くらい待っててね！"
+}
+
+variable "stop_message" {
+  default = "サーバーを停止したよ！これで安心して眠れるね！"
+}

@@ -12,6 +12,7 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 )
 
 type messageTemplate struct {
@@ -80,6 +81,11 @@ func monitorMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func main() {
+	err := godotenv.Load("./.env")
+	if err != nil {
+		log.Fatalf("Failed to load environment file: %v", err)
+	}
+
 	dg, err := newDiscordGo()
 	if err != nil {
 		log.Fatalf("Failed to create Discord session: %v", err)
