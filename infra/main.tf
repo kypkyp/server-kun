@@ -14,12 +14,28 @@ provider "google" {
   project = var.project
 }
 
+# receiver startup script
+data "template_file" "setup_receiver" {
+  template = file("${path.root}/scripts/setup_receiver.sh")
+  vars = {
+    zip_url         = "https://github.com/kypkyp/server-kun/releases/download/v1.0.0/receiver.zip"
+    discord_token   = "${var.discord_token}"
+    discord_channel = "${var.discord_channel}"
+    start_hook      = "${module.cf_start.https_endpoint}"
+    stop_hook       = "${module.cf_stop.https_endpoint}"
+    start_message   = "${var.start_message}"
+    stop_message    = "${var.stop_message}"
+  }
+}
+
 # receiver
 resource "google_compute_instance" "instance_receiver" {
   name         = "server-kun-receiver"
   zone         = var.receiver_zone
   machine_type = "e2-micro"
   tags         = ["http-server", "https-server"]
+
+  metadata_startup_script = data.template_file.setup_receiver.rendered
 
   network_interface {
     network = "default"
