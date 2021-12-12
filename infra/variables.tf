@@ -1,4 +1,4 @@
-# GCP Project ID. You have to set this in secret.tfvars.
+# GCP Project ID. You have to set this in terraform.tfvars.
 variable "project" {}
 
 # Credential file for service accounts.

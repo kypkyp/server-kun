@@ -1,0 +1,15 @@
+# GCP Project ID of target server.
+project = "you-have-to-set-this-123456"
+
+# GCP zone of target server.
+target_zone = "asia-northeast1-b"
+
+# Instance name of target server.
+target_instance_name = "my-game-server"
+
+# Discord token (called as "public key" as well) of your bot account.
+discord_token = "tH1S.is.F4K3.D15CoRdt0KeN.AnD.13CAl1eD.asPubl1cK3YasW3ll"
+
+# Discord channel ID. See how to get your channel ID from:
+# https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
+discord_channel = 123456789012345678
