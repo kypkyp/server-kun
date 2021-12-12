@@ -46,8 +46,10 @@ $ cp /path/to/key infra/credentials/key.json
 
 Next you should set tfvars.
 
+```
 $ mv infra/variables.tfvars.example infra/variables.tfvars
 $ vim infra/variables.tfvars
+```
 
 ```
 # GCP Project ID of target server.
@@ -69,8 +71,10 @@ discord_channel = 782548249026232340
 
 And check validity by `terraform plan`. If the changeset seems legit, it's time to go!
 
+```
 $ terraform plan
 $ terraform apply
+```
 
 ## Contribution
 
