@@ -1,7 +1,7 @@
 # Server-kun
-[日本語](https://github.com/kypkyp/server-kun/blob/master/README.ja.md)
-
 Server-kun is a simple terraform template that makes you handle Google Compute Engine(GCE) instance with Discord easily.
+
+[日本語](https://github.com/kypkyp/server-kun/blob/master/README.ja.md)
 
 ## About this project
 Cloud is super good environment for game server. However, most game needs some high-spec servers and it costs you lots of money.
@@ -16,7 +16,7 @@ Server-kun has following features:
 
 - **(Almost) free.** By using [GCP free quota](https://cloud.google.com/free) freely, server-kun can be installed with almost no additional cost.
 
-- ~~**Easy to install.**~~ Well...maybe not so much for now, but I want to get this app more easy to install. Your contribution is super appreciated! 
+- ~~**Easy to install.**~~ Maybe not so much for now, but I want to get this app more easy to install. Your contribution is super appreciated! 
 
 ## Requirements
 Server-kun doesn't prepare the game server itself. Before installing this, you have to create GCP project and game server that fulfills the conditions below:

@@ -26,20 +26,26 @@ server-kunはゲームサーバー自体は用意しません。まずはGCPで�
 
 まず、このレポジトリをcloneします。
 
+```
 $ git clone https://github.com/kypkyp/server-kun
 $ cd server-kun
+```
 
 次に、[GCP Console](https://console.cloud.google.com/iam-admin/serviceaccounts/)か[コマンドラインツール](https://cloud.google.com/sdk/gcloud/reference/iam/service-accounts/create)からTerraform用のサービスアカウントを作成します。サービスアカウントはGCE, Cloud Functionに対する管理者権限を持つ必要があります。
 
 サービスアカウントを作成したら、鍵をダウンロードし、`infra/credentials/key.json`に保存します。
 
+```
 $ mkdir infra/credentials
 $ cp {鍵のパス} infra/credentials/key.json
+```
 
 次に、terraformを動かすのに必要な環境変数をセットします。
 
+```
 $ mv infra/variables.tfvars.example infra/variables.tfvars
 $ vim infra/variables.tfvars
+```
 
 ```
 # GCP Project ID of target server.
@@ -61,8 +67,10 @@ discord_channel = 782548249026232340
 
 最後に、planが正しく通ることを確認した上で、terraformを実行します。
 
+```
 $ terraform plan
 $ terraform apply
+```
 
 ## Contribution
 
